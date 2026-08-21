@@ -1,0 +1,36 @@
+// Budget App Instructions
+// Quick notes on how to run everything
+
+This folder contains two main files:
+
+1. budgetapp.py        // main program
+2. budget.kv           // Kivy layout file the program uses
+
+// How to run it
+- Make sure Python is installed.
+- Install Kivy if you don’t already have it:
+    pip install kivy
+
+- Keep both files in the same folder.
+- Open a terminal/command prompt in that folder and run:
+    python budgetapp.py
+
+// First-time setup
+When the program opens for the first time, it will ask you to make a PIN.
+After that, it will automatically create a “data” folder in the same directory.  
+It stores everything there
+
+// What the app does
+- Tracks income and expenses
+- Lets you add/view transactions
+- Manage savings goals (add, edit, complete)
+- Budget planning for each month
+- Bill reminders (mark paid, delete, etc.)
+- Basic settings like theme, currency, font size, etc.
+
+// If something breaks
+If the app won’t load or the data looks messed up,
+you can delete the entire “data” folder and run the program again.
+It will recreate all the files automatically (this will erase your old data).
+
+// End of directions

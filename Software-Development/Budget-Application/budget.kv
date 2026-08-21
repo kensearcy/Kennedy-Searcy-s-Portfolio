@@ -1,0 +1,967 @@
+
+
+<Label>:
+    color: app.text_color
+    font_size: app.font_size
+
+<Button>:
+    background_normal: ''
+    background_color: app.primary_color
+    color: app.button_text_color
+    font_size: app.font_size
+
+<TextInput>:
+    background_normal: ''
+    background_color: app.input_bg_color
+    foreground_color: app.input_text_color
+    cursor_color: app.input_text_color
+    font_size: app.font_size
+
+<Slider>:
+    cursor_color: app.get_text_color()
+    cursor_size: (20, 20)
+
+<CheckBox>:
+    color: app.get_text_color()
+
+
+<LoginScreen>:
+    canvas.before:
+        Color:
+            rgba: app.screen_bg_color
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 20
+
+        Label:
+            text: "Enter PIN"
+
+        TextInput:
+            id: pin_input
+            hint_text: "PIN"
+            password: True
+            input_filter: "int"
+
+        Label:
+            id: error_label
+            text: ""
+            color: 1, 0.3, 0.3, 1
+
+        Button:
+            text: "Login"
+            on_release: root.login()
+
+        Button:
+            text: "Create Account"
+            on_release: root.go_to_setup()
+        Button:
+            text: "Forgot PIN?"
+            on_release: app.root.current = "forgot_pin"
+
+
+<SetupAccount>:
+    canvas.before:
+        Color:
+            rgba: app.get_bg_color()
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 20
+
+        Label:
+            text: "Create PIN"
+
+        TextInput:
+            id: new_pin_input
+            hint_text: "New PIN"
+            password: True
+            input_filter: "int"
+
+        TextInput:
+            id: confirm_pin_input
+            hint_text: "Confirm PIN"
+            password: True
+            input_filter: "int"
+
+        Label:
+            id: error_label
+            text: ""
+            color: 1, 0.3, 0.3, 1
+
+        Button:
+            text: "Save PIN"
+            on_release: root.create_account()
+
+        Button:
+            text: "Back to Login"
+            on_release: app.go_back()
+
+
+<AddSavingsGoal>:
+    canvas.before:
+        Color:
+            rgba: app.get_bg_color()
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 20
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 40
+            spacing: 8
+
+            Label:
+                text: 'Name'
+                size_hint_x: 0.2
+                color: app.get_text_color()
+
+            TextInput:
+                id: name_input
+                hint_text: "Goal Name"
+                size_hint_x: 0.8
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 40
+            spacing: 8
+
+            Label:
+                text: 'Target'
+                size_hint_x: 0.2
+                color: app.get_text_color()
+
+            TextInput:
+                id: target_input
+                hint_text: "Target (e.g. 1000)"
+                input_filter: 'float'
+                size_hint_x: 0.8
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 40
+            spacing: 8
+
+            Label:
+                text: 'Current'
+                size_hint_x: 0.2
+                color: app.get_text_color()
+
+            TextInput:
+                id: current_input
+                hint_text: "Current amount"
+                input_filter: 'float'
+                size_hint_x: 0.8
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 40
+            spacing: 8
+
+            Label:
+                text: 'Deadline'
+                size_hint_x: 0.2
+                color: app.get_text_color()
+
+            TextInput:
+                id: deadline_input
+                hint_text: "Deadline (YYYY-MM-DD)"
+                size_hint_x: 0.8
+
+        Label:
+            id: error_label
+            text: ''
+            color: 1, 0.4, 0.4, 1
+
+        BoxLayout:
+            size_hint_y: None
+            height: 56
+            spacing: 10
+
+            Button:
+                text: "Save"
+                size_hint_x: 1
+                on_release: root.add_goal()
+
+            Button:
+                text: "Back"
+                size_hint_x: 1
+                on_release: app.go_back()
+
+
+<Dashboard>:
+    canvas.before:
+        Color:
+            rgba: app.get_bg_color()
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 20
+
+        Label:
+            text: "Dashboard"
+
+        Label:
+            text: "Total Income: " + root.formatted_income
+
+        Label:
+            text: "Total Expenses: " + root.formatted_expenses
+        Label:
+            text: "Balance: " + root.formatted_balance
+
+
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 40
+            spacing: 10
+
+            Label:
+                text: 'Savings Progress:'
+                size_hint_x: None
+                width: 140
+
+            ProgressBar:
+                max: 100
+                value: root.progress_percent
+                size_hint_x: 1
+
+            Label:
+                text: f"{int(root.progress_percent)}%"
+                size_hint_x: None
+                width: 50
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 60
+            spacing: 10
+
+            Label:
+                text: f"Budget ({root.budget_month}):"
+                size_hint_x: None
+                width: 160
+
+            Label:
+                text: "Amount: " + (root.formatted_budget_total if root.formatted_budget_total else app.format_money(root.budget_total))
+
+            Label:
+                text: "Spent: " + (root.formatted_budget_spent if root.formatted_budget_spent else app.format_money(root.budget_spent))
+                size_hint_x: 1
+
+            Label:
+                text: "Remaining: " + (root.formatted_budget_remaining if root.formatted_budget_remaining else app.format_money(root.budget_remaining))
+                size_hint_x: None
+                width: 200
+
+        Button:
+            text: "User Info"
+            on_release: app.root.current = 'user_info'
+
+        Button:
+            text: "Add Transaction"
+            on_release: app.root.current = "add_transaction"
+
+        Button:
+            text: "View Transactions"
+            on_release: app.root.current = "view_transactions"
+
+        Button:
+            text: "Savings Goals"
+            on_release: app.root.current = "view_savings_goals"
+
+        Button:
+            text: "Bill Reminders"
+            on_release: app.root.current = "bill_reminders"
+
+        Button:
+            text: "Budget Planning"
+            on_release: app.root.current = "budget_planning"
+
+        Button:
+            text: "Settings"
+            on_release: app.root.current = "settings"
+
+
+<AddTransaction>:
+    canvas.before:
+        Color:
+            rgba: app.get_bg_color()
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 20
+
+        TextInput:
+            id: amount_input
+            hint_text: "Amount"
+
+        TextInput:
+            id: category_input
+            hint_text: "Category"
+
+        Button:
+            text: "Save"
+            on_release: root.add()
+
+        Button:
+            text: "Back"
+            on_release: app.go_back()
+
+
+<ViewTransactions>:
+    canvas.before:
+        Color:
+            rgba: app.get_bg_color()
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 20
+
+        ScrollView:
+            GridLayout:
+                id: transactions_list
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+
+        Button:
+            text: "Back"
+            on_release: app.go_back()
+
+
+<TransactionItem@Label>:
+    size_hint_y: None
+    height: 40
+
+
+<SavingsGoalItem>:
+    canvas.before:
+        Color:
+            rgba: app.primary_color[0], app.primary_color[1], app.primary_color[2], 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    orientation: "vertical"
+    size_hint_y: None
+    height: 340
+    padding: 14
+    spacing: 10
+
+    GridLayout:
+        cols: 3
+        size_hint_y: None
+        height: 64
+        row_default_height: 32
+        row_force_default: True
+
+        Label:
+            text: "Goal: " + root.name
+            color: app.get_text_color()
+
+        Label:
+            text: "Saved: " + app.format_money(float(root.current) if root.current else 0)
+            color: app.get_text_color()
+
+        Label:
+            text: "Target: " + app.format_money(float(root.target) if root.target else 0)
+            color: app.get_text_color()
+
+    ProgressBar:
+        max: 100
+        value: root.progress
+        size_hint_y: None
+        height: 12
+
+    BoxLayout:
+        size_hint_y: None
+        height: 64 if root.has_content else 0
+        spacing: 10
+
+        Button:
+            text: "Edit"
+            on_release: app.open_edit_goal(root.goal_index)
+
+        Button:
+            text: "Delete"
+            on_release: app.delete_goal(root.goal_index)
+
+        Button:
+            text: "Complete"
+            on_release: app.complete_goal(root.goal_index)
+
+
+
+
+
+
+<CategoryItem@BoxLayout>:
+    index: 0
+    text: ''
+    size_hint_y: None
+    height: 48
+
+    Label:
+        text: root.text
+
+    Button:
+        text: 'Delete'
+        size_hint_x: None
+        width: 80
+        on_release: app.remove_category(root.index)
+
+
+<Categories>:
+    canvas.before:
+        Color:
+            rgba: app.get_bg_color()
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 10
+
+        Label:
+            text: 'Manage Categories'
+
+        ScrollView:
+            GridLayout:
+                id: categories_list
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+
+        BoxLayout:
+            size_hint_y: None
+            height: 48
+            spacing: 10
+
+            TextInput:
+                id: new_category_input
+                hint_text: 'New category name'
+
+            Button:
+                text: 'Add'
+                size_hint_x: None
+                width: 80
+                on_release:
+                    app.add_category(new_category_input.text)
+                    new_category_input.text = ''
+
+        BoxLayout:
+            size_hint_y: None
+            height: 56
+            spacing: 10
+
+            Button:
+                text: 'Back'
+                size_hint_x: 1
+                on_release: app.go_back()
+
+        BoxLayout:
+            size_hint_y: None
+            height: 56
+            spacing: 10
+
+            Button:
+                text: "Add Goal"
+                size_hint_x: 1
+                on_release: app.root.current = "add_savings_goal"
+
+            Button:
+                text: "Back"
+                size_hint_x: 1
+                on_release: app.go_back()
+
+
+<ViewSavingsGoals>:
+    canvas.before:
+        Color:
+            rgba: app.get_bg_color()
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 20
+
+        Label:
+            text: "Savings Goals"
+
+        ScrollView:
+            GridLayout:
+                id: goals_list
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+
+        Button:
+            text: "Add Goal"
+            on_release: app.root.current = "add_savings_goal"
+
+        Button:
+            text: "Completed Goals"
+            on_release: app.root.current = "completed_goals"
+
+        Button:
+            text: "Back"
+            on_release: app.root.current = "dashboard"
+
+
+
+<BillItem@BoxLayout>:
+    index: 0
+    name: ''
+    amount: 0.0
+    due: ''
+    paid: False
+    size_hint_y: None
+    height: 48
+    spacing: 8
+
+    Label:
+        text: root.name
+
+    Label:
+        text: app.format_money(root.amount)
+
+    Label:
+        text: root.due
+
+    Button:
+        text: 'Delete'
+        size_hint_x: None
+        width: 100
+        on_release: app.root.get_screen('bill_reminders').delete_bill(root.index)
+
+    Button:
+        text: 'Paid'
+        size_hint_x: None
+        width: 100
+        on_release: app.root.get_screen('bill_reminders').mark_paid(root.index)
+        disabled: root.paid
+
+
+<BillReminders>:
+    canvas.before:
+        Color:
+            rgba: app.get_bg_color()
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 12
+
+        Label:
+            text: 'Bill Reminders'
+
+        BoxLayout:
+            orientation: 'horizontal'
+            size_hint_y: None
+            height: 40
+            spacing: 8
+
+            TextInput:
+                id: bill_name_input
+                hint_text: 'Bill name'
+
+            TextInput:
+                id: bill_amount_input
+                hint_text: 'Amount'
+                input_filter: 'float'
+
+            TextInput:
+                id: bill_due_input
+                hint_text: 'Due date (YYYY-MM-DD)'
+
+        Label:
+            id: error_label
+            text: ''
+            color: 1, 0.4, 0.4, 1
+
+        BoxLayout:
+            size_hint_y: None
+            height: 48
+            spacing: 10
+
+            Button:
+                text: 'Add Bill'
+                on_release: root.add_bill()
+
+            Button:
+                text: 'Back'
+                on_release: app.go_back()
+
+        ScrollView:
+            GridLayout:
+                id: bills_list
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+
+
+
+<CompletedGoalsScreen>:
+    canvas.before:
+        Color:
+            rgba: app.get_bg_color()
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 20
+
+        Label:
+            text: "Completed Goals"
+
+        ScrollView:
+            GridLayout:
+                id: completed_goals_list
+                cols: 1
+                size_hint_y: None
+                height: self.minimum_height
+
+        Button:
+            text: "Back"
+            on_release: app.root.current = "view_savings_goals"
+
+
+
+
+<BudgetPlanning>:
+    canvas.before:
+        Color:
+            rgba: app.get_bg_color()
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 20
+
+        BoxLayout:
+            size_hint_y: None
+            height: 48
+            spacing: 8
+
+            Button:
+                text: "Create New Budget"
+                on_release: app.create_new_budget()
+
+            Button:
+                text: "Set Current Budget"
+                on_release: app.show_set_budget_prompt()
+
+            Button:
+                text: "Manage Categories"
+                on_release: app.manage_categories()
+
+            Button:
+                text: "Remove Budget"
+                on_release: app.remove_budget()
+
+        Spinner:
+            id: month_spinner
+            text: "Select Month"
+
+        TextInput:
+            id: total_budget_input
+            hint_text: "Total budget (e.g. 1000)"
+            input_filter: 'float'
+
+        TextInput:
+            id: spent_input
+            hint_text: "Amount spent so far"
+            input_filter: 'float'
+
+        TextInput:
+            id: remaining_input
+            hint_text: "Remaining amount (auto-calculated)"
+            readonly: True
+
+        BoxLayout:
+            size_hint_y: None
+            height: 56
+            spacing: 10
+
+            Button:
+                text: "Save"
+                size_hint_x: 1
+                on_release: root.save_budget()
+
+            Button:
+                text: "Back"
+                size_hint_x: 1
+                on_release: app.go_back()
+
+<ForgotPinScreen>:
+    canvas.before:
+        Color:
+            rgba: app.screen_bg_color
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 20
+
+        Label:
+            text: "Forgot PIN?"
+
+        Label:
+            text: "Enter your email to receive a reset PIN"
+            font_size: app.font_size - 2
+
+        TextInput:
+            id: email_input
+            hint_text: "Email"
+            size_hint_y: None
+            height: 40
+
+        Label:
+            id: status_label
+            text: ""
+            color: 0, 0.8, 0, 1
+            size_hint_y: None
+            height: 30
+
+        Button:
+            text: "Send Reset"
+            size_hint_y: None
+            height: 50
+            on_release: root.send_reset()
+
+        Button:
+            text: "Back"
+            size_hint_y: None
+            height: 50
+            on_release: app.go_back()
+
+
+<Settings>:
+    canvas.before:
+        Color:
+            rgba: app.get_bg_color()
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 20
+
+        Label:
+            text: "Settings"
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Name"
+            TextInput:
+                id: name_input
+                hint_text: "Enter Name"
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Email"
+            TextInput:
+                id: email_input
+                hint_text: "Enter Email"
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Theme"
+            Spinner:
+                id: theme_spinner
+                values: ["light", "dark"]
+                text: app.theme
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Currency"
+            Spinner:
+                id: currency_spinner
+                values: ["$", "€", "£", "¥"]
+                text: app.currency
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Font Size"
+            Slider:
+                id: font_slider
+                min: 10
+                max: 30
+                value: app.font_size
+                on_value: app.font_size = int(self.value)
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "New PIN"
+            TextInput:
+                id: new_pin_input
+                hint_text: "New PIN"
+                password: True
+                input_filter: "int"
+
+        BoxLayout:
+            orientation: "horizontal"
+            Label:
+                text: "Confirm PIN"
+            TextInput:
+                id: confirm_pin_input
+                hint_text: "Confirm PIN"
+                password: True
+                input_filter: "int"
+
+        Button:
+            text: "Save Settings"
+            on_release: root.save_settings_screen()
+
+        Button:
+            text: "Reset PIN"
+            on_release: app.show_reset_pin_popup()
+
+        Button:
+            text: "Back"
+            on_release: app.go_back()
+
+
+<UserInfo>:
+    canvas.before:
+        Color:
+            rgba: app.screen_bg_color
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 20
+
+        Label:
+            text: f"Welcome {app.user_name if app.user_name else 'User'}"
+            font_size: app.font_size + 4
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 10
+            Label:
+                text: 'Bill Reminders'
+                size_hint_x: 0.6
+            Switch:
+                id: bill_switch
+                active: app.bill_reminders
+                on_active: app.bill_reminders = self.active; app.save_settings()
+                size_hint_x: 0.4
+
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: 10
+            Label:
+                text: 'Notifications'
+                size_hint_x: 0.6
+            Switch:
+                id: notif_switch
+                active: app.notifications_enabled
+                on_active: app.notifications_enabled = self.active; app.save_settings()
+                size_hint_x: 0.4
+
+        BoxLayout:
+            size_hint_y: None
+            height: 56
+            spacing: 10
+
+            Button:
+                text: 'Sign Out'
+                on_release: app.sign_out()
+
+            Button:
+                text: 'Close'
+                on_release: app.go_home()
+
+<EditSavingsGoal>:
+    canvas.before:
+        Color:
+            rgba: app.get_bg_color()
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: 20
+        spacing: 20
+
+        Label:
+            text: "Edit Savings Goal"
+
+        TextInput:
+            id: edit_name
+            hint_text: "Name"
+
+        TextInput:
+            id: edit_target
+            hint_text: "Target"
+            input_filter: "float"
+
+        TextInput:
+            id: edit_current
+            hint_text: "Current"
+            input_filter: "float"
+
+        TextInput:
+            id: edit_deadline
+            hint_text: "Deadline (YYYY-MM-DD)"
+
+        Button:
+            text: "Save Changes"
+            on_release: root.save_changes()
+
+        Button:
+            text: "Delete Goal"
+            on_release: root.delete_goal()
+
+        Button:
+            text: "Back"
+            on_release: app.go_back()
+
