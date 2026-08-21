@@ -1,5 +1,5 @@
 # Kennedy Searcy's Cybersecurity Portfolio
-
+ 
 I'm a Computer Science graduate student with a strong interest in
 cybersecurity, security operations, and defensive security. This portfolio
 showcases hands-on academic projects I've completed while developing practical
